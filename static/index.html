@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenEvolve Assistente</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    
+    <div id="website-demo">
+        <h1>Bem-vindo à OpenEvolve</h1>
+        <p>Este é o site da vossa empresa. O Chatbot encontra-se integrado no canto inferior direito.</p>
+    </div>
+
+    <!-- Interface do Chatbot que pode ser injetada em qualquer lado -->
+    <div id="openevolve-widget">
+        <!-- Botão Flutuante (Togger) -->
+        <button id="chatbot-toggle-btn">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+
+        <!-- Container do Chatbot (escondido por defeito) -->
+        <div id="chatbot-container" class="hidden">
+            <div id="chatbot-header">
+                <div class="header-info">
+                    <i class="fas fa-robot"></i>
+                    <h3>Assistente OpenEvolve</h3>
+                </div>
+                <!-- Botão de Fechar no Header -->
+                <button id="chatbot-close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="chatbot-messages">
+                <div class="message bot">Olá! Como posso ajudar na experimentação do OpenEvolve hoje?</div>
+            </div>
+            <div id="chatbot-input-area">
+                <input type="text" id="chat-input" placeholder="Escreva a sua dúvida..." autocomplete="off">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

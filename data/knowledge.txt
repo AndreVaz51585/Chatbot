@@ -1,0 +1,5 @@
+A OpenEvolve é uma plataforma especializada na experimentação e automação de processos de desenvolvimento para empresas.
+Os nossos clientes ganham vantagem competitiva e aceleram as suas implementações.
+Caso os utilizadores encontrem um bug, devem contactar support@openevolve.com.
+Os planos atuais consistem num plano "Basic" por 15/mes e um plano "Pro" com opções de auditoria RAG por 50/mes.
+O chatbot OpenEvolve está a ser desenvolvido para guiar rapidamente e esclarecer as dúvidas dos nossos utilizadores em tempo-real.
