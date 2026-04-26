@@ -55,6 +55,7 @@
     const toggleBtn = document.getElementById('chatbot-toggle-btn');
     const closeBtn = document.getElementById('chatbot-close-btn');
 
+
     // histórico local do chat, que enviamos diretamente à nossa API
     let chatHistory = [];
 
