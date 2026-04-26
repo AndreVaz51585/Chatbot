@@ -1,5 +1,33 @@
-A OpenEvolve é uma plataforma especializada na experimentação e automação de processos de desenvolvimento para empresas.
-Os nossos clientes ganham vantagem competitiva e aceleram as suas implementações.
-Caso os utilizadores encontrem um bug, devem contactar support@openevolve.com.
-Os planos atuais consistem num plano "Basic" por 15/mes e um plano "Pro" com opções de auditoria RAG por 50/mes.
-O chatbot OpenEvolve está a ser desenvolvido para guiar rapidamente e esclarecer as dúvidas dos nossos utilizadores em tempo-real.
+Base de Conhecimento: EvoLab-as-a-Service
+
+ 1. Visão Geral da Plataforma
+O EvoLab-as-a-Service é uma plataforma web desenvolvida para simplificar e gerir a evolução automatizada de algoritmos utilizando Inteligência Artificial (AI-Driven Research for Systems - ADRS). 
+Atua como uma interface centralizada para a framework OpenEvolve, permitindo aos utilizadores otimizar código através de modelos LLM sem precisarem de configurar ambientes locais, instâncias de Python ou gerir a execução na linha de comandos.
+
+ 2. Modelos LLM e Credenciais (LLM Credentials)
+Para executar evoluções, o utilizador tem de registar uma credencial LLM válida.
+-Modelos Suportados: A plataforma suporta integrações com OpenAI, Gemini e Modelos Locais (ex: Ollama).
+- Segurança das Chaves: As API Keys inseridas pelos utilizadores (ex: OpenAI, Gemini) são encriptadas de forma segura na Base de Dados (encriptação AES com client_secret) e só são desencriptadas no momento exato em que são injetadas no ambiente de execução.
+- Validação: O sistema recomenda e tenta validar a API Key antes de permitir a sua utilização num job prolongado.
+
+ 3. Estruturação de Projetos e Configurações (Projects e Evolution Configs)
+O processo de evolução acontece dentro de "Projetos" (Projects).
+- Initial Program: O utilizador tem de submeter um código inicial (em Python) que serve de base para a evolução.
+- Evaluator Code: O utilizador tem de fornecer uma função de avaliação (evaluator) que o sistema usará para determinar o quão boa (fitness_score) é a variação gerada pelo LLM.
+- Evolution Config (Configurações): O utilizador pode configurar o número máximo de iterações (max_iterations) e o intervalo de gravação de resultados (checkpoint_interval).
+
+ 4. Execução de Evoluções (Jobs e Isolamento)
+Quando o utilizador inicia uma evolução, é criado um "Job".
+- Fila de Execução: O Job fica no estado QUEUED (em fila). O sistema não bloqueia o navegador do utilizador.
+- Isolamento via Docker: Uma Pool de Workers no Back-end deteta o Job e lança um contentor Docker isolado. O OpenEvolve corre as suas iterações exclusivamente dentro deste contentor, garantindo isolamento total e segurança. O código gerado não afeta o servidor principal.
+- Estados do Job: CREATED (Criado), QUEUED (Em fila), RUNNING (A executar), COMPLETED (Concluído) ou FAILED (Falhado).
+
+ 5. Resultados, Métricas e Checkpoints
+O utilizador não precisa de esperar ativamente pelo fim do Job. Pode consultar os resultados no painel.
+- Métricas (Metrics): Para cada iteração, o sistema guarda o `fitness_score` e o `execution_time`.
+- Checkpoints: Conforme o `checkpoint_interval` definido, o sistema guarda a melhor solução encontrada até ao momento (código gerado e dados numéricos).
+- Best Solution: No final, o sistema apresenta o melhor programa global com base no maior `fitness_score` e permite aceder aos logs de execução do OpenEvolve.
+
+ 6. Resolução de Problemas Comuns
+- Job no estado FAILED: Geralmente ocorre porque a API Key do LLM é inválida/expirada, ou o Evaluator Code tem erros de sintaxe e quebra o próprio processo de avaliação.
+- Custo e Consumo de Tokens: O EvoLab não cobra pelos tokens dos LLMs. Os custos de utilização da OpenAI ou Gemini recaem sobre as contas correspondentes às API Keys introduzidas pelo utilizador.

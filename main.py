@@ -13,7 +13,7 @@ app = FastAPI(title="OpenEvolve Chatbot API")
 # Ligar CORS para permitir que sites externos utilizem a API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http//localhost:5173"], # permite somente front-end especificos. 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,6 +23,8 @@ app.add_middleware(
 rag = RAGSystem()
 
 # Estruturas de dados (Pydantic) para tipagem forte dos requests da API
+# O BaseModel é usado para fazer parsing de objetos JSON para python e validação automática dos dados recebidos.
+# Além disso, facilita a documentação automática da API com OpenAPI/Swagger, mostrando claramente os campos esperados e seus tipos.
 class Message(BaseModel):
     role: str # Pode ser "user" ou "bot"
     content: str
@@ -37,6 +39,9 @@ async def chat_endpoint(request: ChatRequest):
     history_text = ""
     for msg in request.history:
         history_text += f"{msg.role.capitalize()}: {msg.content}`n"
+        # Está a especificar o formato [ {role: "user", content: "Olá"}]
+        
+        
         
     print(f"-> Pedido RAG recebido: {request.question}")
     
@@ -47,7 +52,8 @@ async def chat_endpoint(request: ChatRequest):
 
 # Servir ficheiros estáticos (HTML, CSS, JS) para o frontend
 import os
-os.makedirs("static", exist_ok=True)
+os.makedirs("static", exist_ok=True) # cria a diretoria /static se não existir
+# liga a pasta /static e serve os ficheiros lá dentro. Assim, quando o front-end pedir /static/index.html, ele vai buscar o ficheiro na pasta local static/index.html
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
