@@ -12,7 +12,8 @@ CHROMA_PATH = "chroma_db"
 DATA_DIR = "data" 
 
 
-MODEL_NAME = "qwen2.5-coder:14b"
+#MODEL_NAME = "qwen2.5-coder:14b"
+MODEL_NAME = "llama3"
 EMBEDDING_MODEL_NAME = "paraphrase-multilingual-MiniLM-L12-v2"
 
 ACTIVE_TEMPLATE_PATH = "rag/prompts/assistant_prompt.txt" 

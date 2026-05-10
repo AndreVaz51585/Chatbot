@@ -1,5 +1,5 @@
 
-// IEFE - Immediately Invoked Function Expression
+// IIFE - Immediately Invoked Function Expression
 // garante que o script é completamente isolado e que não interfere com outras variáveis ou bibliotecas do site onde é embutido.
 
 (function() {

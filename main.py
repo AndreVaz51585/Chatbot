@@ -7,7 +7,7 @@ import os
 
 from rag.rag import RAGSystem
 
-app = FastAPI(title="OpenEvolve Chatbot API")
+app = FastAPI(title="EvoLab Chatbot API")
 
 
 
@@ -52,4 +52,3 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def serve_frontend():
     # O Ponto de entrada que serve a página
     return FileResponse("static/index.html")
-
