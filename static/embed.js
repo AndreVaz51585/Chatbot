@@ -5,8 +5,10 @@
 (function() {
 
     // URL base da API (onde o FastAPI está a correr).
-    // temos de alterar quando for para produção, ou seja, quando o widget for embutido em sites externos, e onde o localhost não será acessível. Para isso, podemos usar uma variável de ambiente ou configuração que aponte para o URL correto da API.
-    const BASE_URL = "http://localhost:8000";
+    // Por defeito é inferido a partir do <script src=".../static/embed.js">.
+    // Pode ser sobrescrito definindo window.EVOLAB_CHATBOT_API_URL antes de carregar este script.
+    const scriptUrl = document.currentScript ? new URL(document.currentScript.src) : new URL(window.location.href);
+    const BASE_URL = (window.EVOLAB_CHATBOT_API_URL || scriptUrl.origin).replace(/\/$/, "");
 
     // Injetar o CSS do widget
     const style = document.createElement('link');
@@ -24,24 +26,27 @@
     const widgetContainer = document.createElement('div');
     widgetContainer.id = 'EvoLab-widget';
     widgetContainer.innerHTML = `
-        <button id="chatbot-toggle-btn">
+        <button id="chatbot-toggle-btn" aria-label="Abrir assistente EvoLab">
             <i class="fas fa-comment-dots"></i>
         </button>
 
         <div id="chatbot-container" class="hidden">
             <div id="chatbot-header">
                 <div class="header-info">
-                    <i class="fas fa-robot"></i>
-                    <h3>Assistente EvoLab</h3>
+                    <div class="header-icon"><i class="fas fa-robot"></i></div>
+                    <div>
+                        <h3>Assistente EvoLab</h3>
+                        <p>Ajuda para experimentação</p>
+                    </div>
                 </div>
-                <button id="chatbot-close-btn"><i class="fas fa-times"></i></button>
+                <button id="chatbot-close-btn" aria-label="Fechar assistente"><i class="fas fa-times"></i></button>
             </div>
             <div id="chatbot-messages">
-                <div class="message bot">Olá! Sou o assistente virtual do EvoLab, como posso ajuda-lo hoje?</div>
+                <div class="message bot">Olá! Sou o assistente virtual do EvoLab. Posso ajudar-te a criar credenciais, configurar projetos e acompanhar experiências.</div>
             </div>
             <div id="chatbot-input-area">
                 <input type="text" id="chat-input" placeholder="Escreva a sua dúvida..." autocomplete="off">
-                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+                <button id="send-btn" aria-label="Enviar mensagem"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     `;
@@ -70,10 +75,19 @@
         chatbotContainerElement.classList.add('hidden');
     });
 
+    function cleanBotText(text) {
+        return String(text || "")
+            .replace(/\*\*(.*?)\*\*/g, "$1")
+            .replace(/\*(.*?)\*/g, "$1")
+            .replace(/^#{1,6}\s+/gm, "")
+            .replace(/`([^`]+)`/g, "$1")
+            .trim();
+    }
+
     function appendMessage(sender, text) {
         const msgDiv = document.createElement('div');
         msgDiv.classList.add('message', sender);
-        msgDiv.innerText = text;
+        msgDiv.innerText = sender === 'bot' ? cleanBotText(text) : text;
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
@@ -105,12 +119,13 @@
             });
 
             const data = await response.json();
+            const botReply = cleanBotText(data.reply);
             
             messagesContainer.removeChild(loadingDiv);
-            appendMessage('bot', data.reply);
+            appendMessage('bot', botReply);
 
             chatHistory.push({ role: 'user', content: text });
-            chatHistory.push({ role: 'bot', content: data.reply });
+            chatHistory.push({ role: 'bot', content: botReply });
 
         } catch (error) {
             messagesContainer.removeChild(loadingDiv);
